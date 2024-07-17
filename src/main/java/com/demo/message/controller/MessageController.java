@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.message.entity.Message;
 import com.demo.message.service.MessageService;
+import com.demo.message.vo.Message;
 
 import lombok.RequiredArgsConstructor;
 

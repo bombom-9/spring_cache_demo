@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan
+    xmlns="urn:infinispan:config:14.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:infinispan:config:14.0 https://infinispan.org/schemas/infinispan-config-14.0.xsd">
+
+    <cache-container name="clustered">
+
+        <!-- udp multicast 설정 -->
+        <transport stack="udp">
+            <property name="bind_addr">127.0.0.1</property>
+            <property name="mcast_addr">228.10.10.10</property>
+            <property name="mcast_port">45588</property>
+        </transport>
+
+        <!-- java.io.Serializable marshalling 설정 -->
+        <serialization marshaller="org.infinispan.commons.marshall.JavaSerializationMarshaller">
+            <allow-list>
+                <regex>com.demo.*</regex>
+            </allow-list>
+        </serialization>
+
+        <!-- disk 설정 -->
+        <global-state>
+            <temporary-location path="java.io.tmpdir" />
+        </global-state>
+
+        <local-cache name="testCache">
+            <!-- evict 설정 -->
+            <expiration lifespan="300000" />
+
+            <!-- passivation : heap에서 cache 제거 시, 디스크 저장 여부 -->
+            <persistence passivation="false">
+                <!-- <file-store path="C:/infinispan" preload="true" shared="false" /> -->
+
+                <!-- max-entries : disk cahce 최대 저장 개수 -->
+                <!-- purge : 서버 실행 시, disk cache 삭제 여부 -->
+                <!-- preload : 서버 실행 시, disk cache 로드 여부 -->
+                <file-store max-entries="10" purge="false" preload="true" shared="false" />
+            </persistence>
+
+            <!-- heap 설정 -->
+            <memory storage="HEAP" max-count="3" when-full="REMOVE" />
+        </local-cache>
+
+    </cache-container>
+
+</infinispan>
